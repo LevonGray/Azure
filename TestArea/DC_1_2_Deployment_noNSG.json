@@ -156,7 +156,7 @@
                     "apiVersion": "2019-07-01",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
+                        "[concat('Microsoft.Compute/virtualMachines/', variables('DC1VMName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
