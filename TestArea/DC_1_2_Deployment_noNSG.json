@@ -144,9 +144,8 @@
                         "enabled": true,
                         "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
                     }
-                }
-            },
-            "resources": [
+                },
+               "resources": [
                 {
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "name": "[concat(variables('DC1VMName'),'/CustomScriptExtension')]",
@@ -167,6 +166,7 @@
                    }
                 }
               ]
+            }
         },
         {
             "name": "[variables('DC2NICName')]",
