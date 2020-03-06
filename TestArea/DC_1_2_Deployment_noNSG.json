@@ -83,7 +83,7 @@
                                 "id": "[variables('subnetRef')]"
                             },
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[parameters('DC1IPAddress')"
+                            "privateIPAddress": "[parameters('DC1IPAddress')]"
                         }
                     }
                 ]
@@ -175,7 +175,7 @@
                                 "id": "[variables('subnetRef')]"
                             },
                             "privateIPAllocationMethod": "Static",
-                            "privateIPAddress": "[parameters('DC2IPAddress')"
+                            "privateIPAddress": "[parameters('DC2IPAddress')]"
                         }
                     }
                 ]
