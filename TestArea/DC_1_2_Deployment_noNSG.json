@@ -64,8 +64,8 @@
         "diagnosticsStorageAccountId": "[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
         "ADDSForestBuild": "[concat(variables('DC1VMName'),'/ADDSForest')]",
         "ADDSAddDC": "[concat(variables('DC2VMName'),'/ADDSForest')]",
-        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1')]",
-        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1')]"
+        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, '/DCPrimary.ps1')]",
+        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, '/DCSecond.ps1')]"
 
     },
     "resources": [
@@ -249,6 +249,13 @@
         "adminUsername": {
             "type": "string",
             "value": "[parameters('adminUsername')]"
+            
+        },
+        "deploymentURI": {
+            "type": "string",
+            "value": "[variables('DCSecondscriptfile')]"
+
+            
         }
     }
 }
