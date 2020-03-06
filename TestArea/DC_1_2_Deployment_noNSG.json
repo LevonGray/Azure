@@ -154,7 +154,7 @@
                        "autoUpgradeMinorVersion":true,
                        "settings": {
                            "fileUris": [ "[variables('DCPrimaryscriptfile')]" ],
-                               "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('DCPrimaryscriptfile'), ' ', parameters('DomainName'), ' ', parameters('Netbios'), ' ', parameters('DAPassword'))]"
+                               "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('DCPrimaryscriptfile'), ' ', parameters('DomainName'), ' ', parameters('NetbiosName'), ' ', parameters('DAPassword'))]"
                        }
                    }
                 }
