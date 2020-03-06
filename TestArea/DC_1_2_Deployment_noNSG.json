@@ -152,7 +152,7 @@
             "resources": [
                 {
                     "name": "[concat(variables('DC1VMName'),'/installcustomscript')]",
-                    "type": "extensions",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-07-01",
                     "location": "[parameters('location')]",
                     "dependsOn": [
