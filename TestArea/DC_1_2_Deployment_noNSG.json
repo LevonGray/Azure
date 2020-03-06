@@ -35,9 +35,6 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "DAPassword": {
-            "type": "securestring"
-        },
         "DomainName": {
             "type": "string"
         },
@@ -57,14 +54,15 @@
         "DC1VMName": "[concat('AZ-',parameters('custcode'),'-DC01')]",
         "DC2VMName": "[concat('AZ-',parameters('custcode'),'-DC02')]",
         "DC1NICName":"[concat(variables('DC1VMName'),substring(uniqueString(resourceGroup().id),0,7))]",
-        "DC2NICName":"[concat(variables('DC2VMName'),substring(uniqueString(resourceGroup().id),0,7))]",        
+        "DC2NICName":"[concat(variables('DC2VMName'),substring(uniqueString(resourceGroup().id),0,7))]", 
+        "adDataDiskSize":"32",
+        "storageAccountType": "Premium_LRS",
         "vnetId": "[parameters('virtualNetworkId')]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'diag',substring(uniqueString(resourceGroup().id),0,5)))]",
         "diagnosticsStorageAccountId": "[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
-        "ADDSForestBuild": "[concat(variables('DC1VMName'),'/ADDSForest')]",
-        "ADDSAddDC": "[concat(variables('DC2VMName'),'/ADDSForest')]",
-        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1')]",
+        "adPDCModulesURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/active-directory-new-domain-ha-2-dc/DSC/CreateADPDC.zip",
+        "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
         "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1')]"
 
     },
@@ -109,6 +107,18 @@
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
                     },
+                    "dataDisks": [
+                        {
+                            "name": "[concat(variables('DC1VMNName'),'_data-disk1')]",
+                            "caching": "None",
+                            "diskSizeGB": "[variables('adDataDiskSize')]",
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('storageAccountType')]"
+                            }
+                        }
+                    ],
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
@@ -141,10 +151,10 @@
             },
             "resources": [
                 {
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "name": "[concat(variables('DC1VMName'),'/CustomScriptExtension')]",
+                    "name": "CreateADForest",
+                    "type": "extensions",
                     "apiVersion": "2019-07-01",
-                    "location": "[resourceGroup().location]",
+                    "location": "[parameters('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
                     ],
@@ -154,9 +164,20 @@
                        "typeHandlerVersion": "1.7",
                        "autoUpgradeMinorVersion":true,
                        "settings": {
-                           "fileUris": [ "[variables('DCPrimaryscriptfile')]" 
-                        ],
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('DCPrimaryscriptfile'), ' ', parameters('DomainName'), ' ', parameters('NetbiosName'), ' ', parameters('DAPassword'))]"
+                        "ModulesUrl": "[variables('adPDCModulesURL')]",
+                        "ConfigurationFunction": "[variables('adPDCConfigurationFunction')]",
+                        "Properties": {
+                            "DomainName": "[parameters('domainName')]",
+                            "AdminCreds": {
+                                "UserName": "[parameters('adminUsername')]",
+                                "Password": "PrivateSettingsRef:AdminPassword"
+                            }
+                        }
+                    },
+                    "protectedSettings": {
+                        "Items": {
+                            "AdminPassword": "[parameters('AdminPassword')]"
+                        }
                        }
                    }
                 }
