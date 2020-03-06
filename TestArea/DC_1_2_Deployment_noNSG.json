@@ -151,12 +151,12 @@
             },
             "resources": [
                 {
-                    "name": "CreateADForest",
+                    "name": "[concat(variables('DC1VMName'),'/installcustomscript')]",
                     "type": "extensions",
                     "apiVersion": "2019-07-01",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
+                        "[concat('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
