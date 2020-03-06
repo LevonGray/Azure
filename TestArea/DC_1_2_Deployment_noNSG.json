@@ -62,8 +62,8 @@
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'diag',substring(uniqueString(resourceGroup().id),0,5)))]",
         "diagnosticsStorageAccountId": "[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
-        "ADDSForestBuild": "[concat(parameters('DC1VMName'),'/ADDSForest')]",
-        "ADDSAddDC": "[concat(parameters('DC2VMName'),'/ADDSForest')]",
+        "ADDSForestBuild": "[concat(variables('DC1VMName'),'/ADDSForest')]",
+        "ADDSAddDC": "[concat(variables('DC2VMName'),'/ADDSForest')]",
         "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1')]",
         "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1')]"
 
