@@ -44,13 +44,6 @@
         "NetbiosName": {
             "type": "string"
         },
-        "DomainAdministrator": {
-            "type": "string",
-            "defaultValue": "Administrator"
-        },
-        "DomainAdminPassword": {
-            "type": "securestring"
-        },
         "diagnosticsStorageAccountType": {
             "type": "string",
             "defaultValue": "Standard_LRS"
@@ -71,8 +64,8 @@
         "diagnosticsStorageAccountId": "[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
         "ADDSForestBuild": "[concat(parameters('DC1VMName'),'/ADDSForest')]",
         "ADDSAddDC": "[concat(parameters('DC2VMName'),'/ADDSForest')]",
-        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1']",
-        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1']"
+        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1')]",
+        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1')]"
 
     },
     "resources": [
