@@ -64,8 +64,8 @@
         "diagnosticsStorageAccountId": "[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
         "ADDSForestBuild": "[concat(variables('DC1VMName'),'/ADDSForest')]",
         "ADDSAddDC": "[concat(variables('DC2VMName'),'/ADDSForest')]",
-        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, '/DCPrimary.ps1')]",
-        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, '/DCSecond.ps1')]"
+        "DCPrimaryscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCPrimary.ps1')]",
+        "DCSecondscriptfile" : "[uri(deployment().properties.templateLink.uri, 'DCSecond.ps1')]"
 
     },
     "resources": [
@@ -137,30 +137,30 @@
                         "enabled": true,
                         "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
                     }
-                },
-                "resources": [
-                    {
-                        "type": "Microsoft.Compute/virtualMachines/extensions",
-                        "name": "[concat(variables('DC1VMName'),'/CustomScriptExtension')]",
-                        "apiVersion": "2019-07-01",
-                        "location": "[resourceGroup().location]",
-                        "dependsOn": [
-                            "[resourceId('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
-                        ],
-                        "properties": {
-                            "publisher": "Microsoft.Azure.Extensions",
-                            "type": "CustomScriptExtension",
-                           "typeHandlerVersion": "1.7",
-                           "autoUpgradeMinorVersion":true,
-                           "settings": {
-                               "fileUris": [ "[variables('DCPrimaryscriptfile')]" 
-                            ],
-                                "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('DCPrimaryscriptfile'), ' ', parameters('DomainName'), ' ', parameters('NetbiosName'), ' ', parameters('DAPassword'))]"
-                           }
-                       }
-                    }
-                  ]
                 }
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "name": "[concat(variables('DC1VMName'),'/CustomScriptExtension')]",
+                    "apiVersion": "2019-07-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', variables('DC1VMName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScriptExtension",
+                       "typeHandlerVersion": "1.7",
+                       "autoUpgradeMinorVersion":true,
+                       "settings": {
+                           "fileUris": [ "[variables('DCPrimaryscriptfile')]" 
+                        ],
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('DCPrimaryscriptfile'), ' ', parameters('DomainName'), ' ', parameters('NetbiosName'), ' ', parameters('DAPassword'))]"
+                       }
+                   }
+                }
+              ]
         },
         {
             "name": "[variables('DC2NICName')]",
