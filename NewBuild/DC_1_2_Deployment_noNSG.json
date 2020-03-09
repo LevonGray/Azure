@@ -41,6 +41,9 @@
         "NetbiosName": {
             "type": "string"
         },
+        "managedID": {
+            "type": "string"
+        },
         "diagnosticsStorageAccountType": {
             "type": "string",
             "defaultValue": "Standard_LRS"
@@ -58,9 +61,9 @@
         "vnetId": "[parameters('virtualNetworkId')]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'diag',substring(uniqueString(resourceGroup().id),0,5)))]",
-        "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]"
-
-    },
+        "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
+        "managedidentity":"[concat('/subscriptions/',[subscription().subscriptionId],'/resourceGroups/',[resourcegroup().name],'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('managedID') )}"
+        },
     "resources": [
         {
             "name": "[variables('DC1NICName')]",
@@ -132,6 +135,32 @@
                     }
                 }
             }
+            "resources": [
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2019-10-01-preview",
+                    "name": "runPowerShellInline",
+                    "location": "[resourceGroup().location]",
+                    "kind": "AzurePowerShell", 
+                    "identity": {
+                      "type": "userAssigned",
+                      "userAssignedIdentities": {
+                          "[variables('managedidentity')]":{}
+                        }
+                        },
+                    "properties": {
+                      "forceUpdateTag": 1,
+                      "azPowerShellVersion": "3.0", 
+                      "arguments": "[concat('-DomainName ', parameters('DomainName'),' -NetBios ', parameters('NetbiosName'),' -DAPassword ',parameters('adminPassword'))]",
+                      "primaryScriptUri": "https://raw.githubusercontent.com/LevonGray/Azure/master/NewBuild/DCPrimary.ps1",
+                      "supportingScriptUris":[],
+                      "timeout": "PT30M",
+                      "cleanupPreference": "OnSuccess",
+                      "retentionInterval": "P1D"
+                    }
+                }
+            ] 
+            
         },
         {
             "name": "[variables('DC2NICName')]",
