@@ -62,7 +62,7 @@
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'diag',substring(uniqueString(resourceGroup().id),0,5)))]",
         "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]",
-        "managedidentity":"[concat('/subscriptions/',[subscription().subscriptionId],'/resourceGroups/',[resourcegroup().name],'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('managedID') )}"
+        "managedidentity":"[concat((resourcegroup().resourceId),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('managedID') )}"
         },
     "resources": [
         {
@@ -143,7 +143,7 @@
                     "location": "[resourceGroup().location]",
                     "kind": "AzurePowerShell", 
                     "dependsOn": [ 
-                        "[concat('Microsoft.Compute/virtualMachines',variables('DC1VMName')]"
+                        "[concat('Microsoft.Compute/virtualMachines/',variables('DC1VMName')]"
                     ],
                     "identity": {
                       "type": "userAssigned",
