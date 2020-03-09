@@ -142,6 +142,9 @@
                     "name": "runPowerShellInline",
                     "location": "[resourceGroup().location]",
                     "kind": "AzurePowerShell", 
+                    "dependsOn": [ 
+                        "[concat('Microsoft.Compute/virtualMachines',variables('DC1VMName')]"
+                    ],
                     "identity": {
                       "type": "userAssigned",
                       "userAssignedIdentities": {
