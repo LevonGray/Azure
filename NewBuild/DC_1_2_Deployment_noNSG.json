@@ -15,9 +15,11 @@
         "virtualNetworkId": {
             "type": "string"
         },
-        "virtualMachineRG": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().name]"
+        "DC1IPAddress": {
+            "type": "string"
+        },
+        "DC2IPAddress": {
+            "type": "string"
         },
         "osDiskType": {
             "type": "string",
@@ -32,6 +34,12 @@
         },
         "adminPassword": {
             "type": "securestring"
+        },
+        "DomainName": {
+            "type": "string"
+        },
+        "NetbiosName": {
+            "type": "string"
         },
         "diagnosticsStorageAccountType": {
             "type": "string",
@@ -67,7 +75,8 @@
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             },
-                            "privateIPAllocationMethod": "Dynamic"
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('DC1IPAddress')]"
                         }
                     }
                 ]
@@ -137,7 +146,8 @@
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             },
-                            "privateIPAllocationMethod": "Dynamic"
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('DC2IPAddress')]"
                         }
                     }
                 ]
