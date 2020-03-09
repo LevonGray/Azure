@@ -134,7 +134,7 @@
                         "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
                     }
                 }
-            }
+            },
             "resources": [
                 {
                     "type": "Microsoft.Resources/deploymentScripts",
