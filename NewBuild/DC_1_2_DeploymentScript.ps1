@@ -14,7 +14,7 @@ $DC2IP = [string]$Ipaddresses[1]
 $RG = New-AzResourceGroup -Name "RG-$($custcode)-DomainControllers" -Location $VNET.Location
 
 ## Deploy the template for standard Domain Controllers you will be prompted to set the local admin password
-new-AzResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/LevonGray/Azure/test-deployment/NewBuild/DC_1_2_Deployment_noNSG.json" `
+new-AzResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/LevonGray/Azure/master/NewBuild/DC_1_2_Deployment_noNSG.json" `
  -custcode $Custcode `
  -ResourceGroupName $RG.ResourceGroupName `
  -subnetname $VNET.Subnets.name `
