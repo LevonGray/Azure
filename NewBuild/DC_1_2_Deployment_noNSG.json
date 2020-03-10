@@ -35,12 +35,6 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "DomainName": {
-            "type": "string"
-        },
-        "NetbiosName": {
-            "type": "string"
-        },
         "diagnosticsStorageAccountType": {
             "type": "string",
             "defaultValue": "Standard_LRS"
