@@ -13,7 +13,9 @@ $DC2IP = [string]$Ipaddresses[1]
 ## Create a new resource group for the domain controllers in the same region as the VNET created.
 $RG = New-AzResourceGroup -Name "RG-$($custcode)-DomainControllers" -Location $VNET.Location
 
-## Deploy the template for standard Domain Controllers you will be prompted to set the local admin password
+## Deploy the template for standard Domain Controllers you will be prompted to set the local admin password 
+## NOTE this will be the Administrator account for the domain, so make it secure and add it to Teampass
+
 new-AzResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/LevonGray/Azure/master/NewBuild/DC_1_2_Deployment_noNSG.json" `
  -custcode $Custcode `
  -ResourceGroupName $RG.ResourceGroupName `
