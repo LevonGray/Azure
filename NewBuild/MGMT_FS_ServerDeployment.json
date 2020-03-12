@@ -50,8 +50,8 @@
         "FSVMName": "[concat('AZ-',parameters('custcode'),'-FS01')]",
         "FSNICName":"[concat(variables('FSVMName'),substring(uniqueString(resourceGroup().id),0,7))]",
         "subnetRef": "[concat(parameters('virtualNetworkId'), '/subnets/', parameters('subnetName'))]",
-        "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'servdiag',substring(uniqueString(resourceGroup().id),2,7)))]",
-        "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]"
+        "diagname": "[toLower(concat(parameters('custcode'),'servdiag',substring(uniqueString(resourceGroup().id),2,7)))]",
+        "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagname') )]"
 
     },
     "resources": [
@@ -82,7 +82,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('MGMTNICName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -98,7 +98,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2019-Datacenter-Core",
+                        "sku": "2019-Datacenter",
                         "version": "latest"
                     }
                 },
@@ -121,7 +121,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
+                        "storageUri": "[concat('https://', variables('diagname'), '.blob.core.windows.net/')]"
                     }
                 }
             }
@@ -153,7 +153,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('FSNICName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -169,7 +169,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2019-Datacenter-Core",
+                        "sku": "2019-Datacenter",
                         "version": "latest"
                     }
                 },
@@ -192,13 +192,13 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
+                        "storageUri": "[concat('https://', variables('diagname'), '.blob.core.windows.net/')]"
                     }
                 }
             }
         },
         {
-            "name": "[variables('diagnosticsStorageAccountName')]",
+            "name": "[variables('diagname')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
             "location": "[parameters('location')]",
