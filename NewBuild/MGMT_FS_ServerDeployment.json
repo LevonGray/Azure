@@ -1,0 +1,218 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "custcode": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourcegroup().location]"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "virtualNetworkId": {
+            "type": "string"
+        },
+        "MGMTIPAddress": {
+            "type": "string"
+        },
+        "FSIPAddress": {
+            "type": "string"
+        },
+        "osDiskType": {
+            "type": "string",
+            "defaultValue": "Premium_LRS"
+        },
+        "virtualMachineSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3"
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "diagnosticsStorageAccountType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS"
+        },
+        "diagnosticsStorageAccountKind": {
+            "type": "string",
+            "defaultValue": "Storage"
+        }
+    },
+    "variables": {
+        "MGMTVMName": "[concat('AZ-',parameters('custcode'),'-MGMT')]",
+        "MGMTNICName":"[concat(variables('MGMTVMName'),substring(uniqueString(resourceGroup().id),0,7))]",
+        "FSVMName": "[concat('AZ-',parameters('custcode'),'-FS01')]",
+        "FSNICName":"[concat(variables('FSVMName'),substring(uniqueString(resourceGroup().id),0,7))]",
+        "subnetRef": "[concat(parameters('virtualNetworkId'), '/subnets/', parameters('subnetName'))]",
+        "diagnosticsStorageAccountName": "[toLower(concat(parameters('custcode'),'servdiag',substring(uniqueString(resourceGroup().id),2,7)))]",
+        "diagnosticsStorageAccountId":"[concat('Microsoft.Storage/storageAccounts/',variables('diagnosticsStorageAccountName') )]"
+
+    },
+    "resources": [
+        {
+            "name": "[variables('MGMTNICName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('MGMTIPAddress')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('MGMTVMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('MGMTNICName'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter-Core",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('MGMTNICName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[variables('MGMTVMName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[variables('FSNICName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('FSIPAddress')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('FSVMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('FSNICName'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter-Core",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('FSNICName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[variables('FSVMName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[variables('diagnosticsStorageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        }
+    }
+}
