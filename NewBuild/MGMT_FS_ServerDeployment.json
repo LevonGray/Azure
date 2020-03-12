@@ -47,7 +47,7 @@
     "variables": {
         "MGMTVMName": "[concat('AZ-',parameters('custcode'),'-MGMT')]",
         "MGMTNICName":"[concat(variables('MGMTVMName'),substring(uniqueString(resourceGroup().id),0,7))]",
-        "FSVMName": "[concat('AZ-',parameters('custcode'),'-FS01')]",
+        "FSVMName": "[concat('AZ-',parameters('custcode'),'-FILE')]",
         "FSNICName":"[concat(variables('FSVMName'),substring(uniqueString(resourceGroup().id),0,7))]",
         "subnetRef": "[concat(parameters('virtualNetworkId'), '/subnets/', parameters('subnetName'))]",
         "diagname": "[toLower(concat(parameters('custcode'),'servdiag',substring(uniqueString(resourceGroup().id),2,7)))]",
