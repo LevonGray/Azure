@@ -175,6 +175,14 @@
                             "managedDisk": {
                                 "storageAccountType": "[parameters('osDiskType')]"
                             }
+                        },
+                        {
+                            "diskSizeGB": 63,
+                            "lun": 1,
+                            "createOption": "Empty",                        
+                            "managedDisk": {
+                                "storageAccountType": "[parameters('osDiskType')]"
+                            }
                         }
                     ],
                     "imageReference": {
