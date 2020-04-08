@@ -1,2 +1,0 @@
-This is a Civica specific parameters file for the MS provided Lighthouse Delegation github template found at: 
-https://github.com/Azure/Azure-Lighthouse-samples/tree/master/Azure-Delegated-Resource-Management/templates/delegated-resource-management
