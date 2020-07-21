@@ -96,6 +96,16 @@
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
                     },
+                    "dataDisks": [
+                        {
+                            "diskSizeGB": 31,
+                            "lun": 0,
+                            "createOption": "Empty",                        
+                            "managedDisk": {
+                                "storageAccountType": "[parameters('osDiskType')]"
+                            }
+                        }
+                    ],
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
@@ -166,7 +176,18 @@
                         "managedDisk": {
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
+                        
                     },
+                    "dataDisks": [
+                        {
+                            "diskSizeGB": 31,
+                            "lun": 0,
+                            "createOption": "Empty",                        
+                            "managedDisk": {
+                                "storageAccountType": "[parameters('osDiskType')]"
+                            }
+                        }
+                    ],
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
