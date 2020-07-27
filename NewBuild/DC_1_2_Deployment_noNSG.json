@@ -27,7 +27,7 @@
         },
         "virtualMachineSize": {
             "type": "string",
-            "defaultValue": "Standard_b2ms"
+            "defaultValue": "Standard_b2s"
         },
         "adminUsername": {
             "type": "string"
