@@ -58,7 +58,7 @@
     "resources": [
         {
             "type": "Microsoft.Compute/availabilitySets",
-            "name": "[variables(‘availabilitySetName’)]",
+            "name": "[variables('availabilitySetName')]",
             "apiVersion": "2019–03–01",
             "location": "[parameters(‘location’)]",
             "properties": {
@@ -134,7 +134,7 @@
                     ]
                 },
                 "availabilitySet": {
-                    "id": "[resourceId(‘Microsoft.Compute/availabilitySets’, variables(‘availabilitySetName’))]"
+                    "id": "[resourceId(‘Microsoft.Compute/availabilitySets’, variables('availabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('DC1VMName')]",
@@ -219,7 +219,7 @@
                     ]
                 },
                 "availabilitySet": {
-                    "id": "[resourceId(‘Microsoft.Compute/availabilitySets’, variables(‘availabilitySetName’))]"
+                    "id": "[resourceId(‘Microsoft.Compute/availabilitySets’, variables('availabilitySetName'))]"
                 },
                 "osProfile": {
                     "computerName": "[variables('DC2VMName')]",
