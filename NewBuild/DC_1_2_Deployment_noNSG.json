@@ -96,7 +96,8 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('DC1NICName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]",
+                "[concat('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -180,7 +181,8 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('DC2NICName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagname'))]",
+                "[concat('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
